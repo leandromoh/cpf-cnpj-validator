@@ -22,7 +22,7 @@ namespace DocumentoHelper
         internal static int[] ToIntArray(this string str) => str.Where(char.IsDigit).Select(x => x - '0').ToArray();
 
         internal static IEnumerable<int> NumerosRandom(int count, int min, int max) => 
-            Enumerable.Range(0, count).Select(_ => random.Next(min, max -1)).ToList();
+            Enumerable.Range(0, count).Select((_, index) => random.Next(index == 0 ? 1 : min, max -1)).ToList();
 
         internal static IEnumerable<int> CalculateCheckDigits(IEnumerable<int> xs, IEnumerable<IEnumerable<int>> zipper) => 
             zipper.Aggregate(xs, (a,b) => a.Concat(new[]{ CriaDigitoVerificador(b, a) })).Skip(xs.Count());
