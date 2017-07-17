@@ -3,13 +3,17 @@ namespace DocumentoHelper.Test
     using NUnit.Framework;
     using DocumentoHelper;
     using System.Linq;
+    using System.Collections.Generic;
 
     [TestFixture]
     public class CPFTest
     {
 
-       [Test]
-       public void GenerateCPF() => Assert.IsTrue(CPF.IsValid(CPF.Generate()));
+        [TestCaseSource(nameof(GenerateCPFSource))]
+        public void GenerateCPF(long cpf) => Assert.IsTrue(CPF.IsValid(cpf));
+		
+        public static IEnumerable<object> GenerateCPFSource() =>
+            Enumerable.Range(0, 100).Select(_ => CPF.Generate()).Cast<object>();
 
         [Test]
         public void CalculateCheckDigits() => 

@@ -3,13 +3,17 @@ namespace DocumentoHelper.Test
     using NUnit.Framework;
     using DocumentoHelper;
     using System.Linq;
+    using System.Collections.Generic;
 
     [TestFixture]
     public class CNPJTest
     {
 
-       [Test]
-       public void GenerateCNPJ() => Assert.IsTrue(CNPJ.IsValid(CNPJ.Generate()));
+        [TestCaseSource(nameof(GenerateCNPJSource))]
+        public void GenerateCNPJ(long cnpj) => Assert.IsTrue(CNPJ.IsValid(cnpj));
+		
+        public static IEnumerable<object> GenerateCNPJSource() =>
+            Enumerable.Range(0, 100).Select(_ => CNPJ.Generate()).Cast<object>();
 
         [Test]
         public void CalculateCheckDigits() => 
