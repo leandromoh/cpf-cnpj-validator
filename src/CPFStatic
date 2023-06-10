@@ -1,0 +1,31 @@
+using System.Runtime.CompilerServices;
+
+namespace DocumentoHelper;
+
+public readonly partial struct CPF
+{
+    public static bool Validate(string value) =>
+        new CPF(value).IsValid;
+
+    public static string GenerateUnformatted()
+    {
+        Span<char> dest = stackalloc char[11];
+        GenerateImpl(dest);
+        return new string(dest);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    private static void GenerateImpl(Span<char> dest)
+    {
+        var random = new Random();
+        Span<int> digits = stackalloc int[11];
+        for (var i = 0; i < 9; i++)
+            digits[i] = random.Next(0, 9);
+
+        digits[9] = CriaDigitoVerificador1(digits);
+        digits[10] = CriaDigitoVerificador2(digits);
+
+        for (var i = 0; i < digits.Length; i++)
+            dest[i] = (char)(digits[i] + '0');
+    }
+}
