@@ -8,17 +8,17 @@ public readonly struct CPFImp3
     public CPFImp3(string value)
     {
         Value = value;
-
-        Span<int> digits = stackalloc int[11];
-
-        IsValid = Utils.TryWriteNumbers(digits, value) && ValidaDigito(digits);
+        IsValid = Validate(value);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    private static bool ValidaDigito(ReadOnlySpan<int> cpf)
+    public static bool Validate(string value)
     {
-        return CriaDigitoVerificador1(cpf) == cpf[9]
-            && CriaDigitoVerificador2(cpf) == cpf[10];
+        Span<int> digits = stackalloc int[11];
+
+        return Utils.TryWriteNumbers(digits, value) 
+            && CriaDigitoVerificador1(digits) == digits[9]
+            && CriaDigitoVerificador2(digits) == digits[10];
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]

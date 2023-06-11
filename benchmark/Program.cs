@@ -2,6 +2,7 @@
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using System.Buffers;
+using DocumentoHelper;
 
 public class Program
 {
@@ -27,24 +28,16 @@ public class CPFBenchmark
 
         CPFs = Enumerable
             .Range(0, Count)
-            .Select(_ => BuildCPF())
+            .Select(_ => CPF.GenerateUnformatted())
             .ToArray();
+    }
 
-        string BuildCPF()
-        {
-            Span<int> digits = stackalloc int[11];
-            for (var i = 0; i < 9; i++)
-                digits[i] = random.Next(0, 9);
-
-            digits[9] = CPFImp3.CriaDigitoVerificador1(digits);
-            digits[10] = CPFImp3.CriaDigitoVerificador2(digits);
-
-            Span<char> chars = stackalloc char[11];
-            for (var i = 0; i < digits.Length; i++)
-                chars[i] = (char)(digits[i] + '0');
-
-            return new string(chars);
-        }
+    [Benchmark]
+    public void Current()
+    {
+        foreach (var x in CPFs)
+            if (new CPF(x).IsValid is false)
+                Fail(x);
     }
 
     [Benchmark]
