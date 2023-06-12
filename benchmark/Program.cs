@@ -88,6 +88,38 @@ public class CPFBenchmark
                 Fail(x);
     }
 
+    [Benchmark]
+    public void Imp7()
+    {
+        foreach (var x in CPFs)
+            if (new CPFImp7(x).IsValid is false)
+                Fail(x);
+    }
+
+    [Benchmark]
+    public void Imp8()
+    {
+        foreach (var x in CPFs)
+            if (new CPFImp8(x).IsValid is false)
+                Fail(x);
+    }
+
+    [Benchmark]
+    public void Imp9()
+    {
+        foreach (var x in CPFs)
+            if (new CPFImp9(x).IsValid is false)
+                Fail(x);
+    }
+
+    [Benchmark]
+    public void Imp10()
+    {
+        foreach (var x in CPFs)
+            if (new CPFImp10(x).IsValid is false)
+                Fail(x);
+    }
+
     private void Fail(string cpf) =>
         throw new Exception($"failed for '{cpf}' cpf");
 }

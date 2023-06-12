@@ -1,13 +1,11 @@
 using System.Runtime.CompilerServices;
 
-namespace DocumentoHelper;
-
-public readonly struct CPF
+public readonly struct CPFImp10
 {
     public readonly string Value;
     public readonly bool IsValid;
 
-    public CPF(string value)
+    public CPFImp10(string value)
     {
         Value = value;
         IsValid = Validate(value);
@@ -26,28 +24,21 @@ public readonly struct CPF
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     internal static int CriaDigitoVerificador(ReadOnlySpan<int> cpf, bool skipFirst)
     {
-        var i = 0;
+        var i = skipFirst ? -1 : 0;
 
         var total =
-            (skipFirst ? 0 : cpf[i++] * 11) +
-            cpf[i++] * 10 +
-            cpf[i++] * 9 +
-            cpf[i++] * 8 +
-            cpf[i++] * 7 +
-            cpf[i++] * 6 +
-            cpf[i++] * 5 +
-            cpf[i++] * 4 +
-            cpf[i++] * 3 +
-            cpf[i++] * 2;
+            (skipFirst ? 0 : cpf[i] * 11) +
+            cpf[1 + i] * 10 +
+            cpf[2 + i] * 9 +
+            cpf[3 + i] * 8 +
+            cpf[4 + i] * 7 +
+            cpf[5 + i] * 6 +
+            cpf[6 + i] * 5 +
+            cpf[7 + i] * 4 +
+            cpf[8 + i] * 3 +
+            cpf[9 + i] * 2;
 
         total %= 11;
         return total < 2 ? 0 : 11 - total;
-    }
-
-    public static string GenerateUnformatted()
-    {
-        Span<char> dest = stackalloc char[11];
-        Utils.GenerateImpl(dest, CriaDigitoVerificador);
-        return new string(dest);
     }
 }
