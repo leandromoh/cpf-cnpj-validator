@@ -18,49 +18,30 @@ public readonly struct CNPJ
     {
         Span<int> digits = stackalloc int[14];
 
-        return Utils.TryWriteNumbers(digits, value) 
-            && CriaDigitoVerificador1(digits) == digits[12]
-            && CriaDigitoVerificador2(digits) == digits[13];
+        return Utils.TryWriteNumbers(digits, value)
+            && CriaDigitoVerificador(digits, true) == digits[12]
+            && CriaDigitoVerificador(digits, false) == digits[13];
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    internal static int CriaDigitoVerificador1(ReadOnlySpan<int> cnpj)
+    internal static int CriaDigitoVerificador(ReadOnlySpan<int> cnpj, bool skipFirst)
     {
-        var total =
-            cnpj[0] * 5 +
-            cnpj[1] * 4 +
-            cnpj[2] * 3 +
-            cnpj[3] * 2 +
-            cnpj[4] * 9 +
-            cnpj[5] * 8 +
-            cnpj[6] * 7 +
-            cnpj[7] * 6 +
-            cnpj[8] * 5 +
-            cnpj[9] * 4 +
-            cnpj[10] * 3 +
-            cnpj[11] * 2;
+        var i = 0;
 
-        total %= 11;
-        return total < 2 ? 0 : 11 - total;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    internal static int CriaDigitoVerificador2(ReadOnlySpan<int> cnpj)
-    {
         var total =
-            cnpj[0] * 6 +
-            cnpj[1] * 5 +
-            cnpj[2] * 4 +
-            cnpj[3] * 3 +
-            cnpj[4] * 2 +
-            cnpj[5] * 9 +
-            cnpj[6] * 8 +
-            cnpj[7] * 7 +
-            cnpj[8] * 6 +
-            cnpj[9] * 5 +
-            cnpj[10] * 4 +
-            cnpj[11] * 3 +
-            cnpj[12] * 2;
+            (skipFirst ? 0 : cnpj[i++] * 6) +
+            cnpj[i++] * 5 +
+            cnpj[i++] * 4 +
+            cnpj[i++] * 3 +
+            cnpj[i++] * 2 +
+            cnpj[i++] * 9 +
+            cnpj[i++] * 8 +
+            cnpj[i++] * 7 +
+            cnpj[i++] * 6 +
+            cnpj[i++] * 5 +
+            cnpj[i++] * 4 +
+            cnpj[i++] * 3 +
+            cnpj[i++] * 2;
 
         total %= 11;
         return total < 2 ? 0 : 11 - total;
@@ -69,7 +50,7 @@ public readonly struct CNPJ
     public static string GenerateUnformatted()
     {
         Span<char> dest = stackalloc char[14];
-        Utils.GenerateImpl(dest, CriaDigitoVerificador1, CriaDigitoVerificador2);
+        Utils.GenerateImpl(dest, CriaDigitoVerificador);
         return new string(dest);
     }
 }

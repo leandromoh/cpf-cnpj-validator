@@ -1,18 +1,17 @@
 using System.Runtime.CompilerServices;
 
-namespace DocumentoHelper;
-
-public readonly struct CPF
+public readonly struct CPFImp9
 {
     public readonly string Value;
     public readonly bool IsValid;
 
-    public CPF(string value)
+    public CPFImp9(string value)
     {
         Value = value;
         IsValid = Validate(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static bool Validate(string value)
     {
         Span<int> digits = stackalloc int[11];
@@ -41,12 +40,5 @@ public readonly struct CPF
 
         total %= 11;
         return total < 2 ? 0 : 11 - total;
-    }
-
-    public static string GenerateUnformatted()
-    {
-        Span<char> dest = stackalloc char[11];
-        Utils.GenerateImpl(dest, CriaDigitoVerificador);
-        return new string(dest);
     }
 }

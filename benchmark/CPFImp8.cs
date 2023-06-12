@@ -1,34 +1,31 @@
 using System.Runtime.CompilerServices;
 
-namespace DocumentoHelper;
-
-public readonly struct CPF
+public readonly struct CPFImp8
 {
     public readonly string Value;
     public readonly bool IsValid;
 
-    public CPF(string value)
+    public CPFImp8(string value)
     {
         Value = value;
         IsValid = Validate(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static bool Validate(string value)
     {
         Span<int> digits = stackalloc int[11];
 
-        return Utils.TryWriteNumbers(digits, value)
-            && CriaDigitoVerificador(digits, true) == digits[9]
-            && CriaDigitoVerificador(digits, false) == digits[10];
+        return Utils.TryWriteNumbers(digits, value) 
+            && CriaDigitoVerificador(digits, -1) == digits[9]
+            && CriaDigitoVerificador(digits, 0) == digits[10];
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    internal static int CriaDigitoVerificador(ReadOnlySpan<int> cpf, bool skipFirst)
+    internal static int CriaDigitoVerificador(ReadOnlySpan<int> cpf, int i)
     {
-        var i = 0;
-
         var total =
-            (skipFirst ? 0 : cpf[i++] * 11) +
+            (i == 0 ? cpf[i++] * 11 : ++i) +
             cpf[i++] * 10 +
             cpf[i++] * 9 +
             cpf[i++] * 8 +
@@ -41,12 +38,5 @@ public readonly struct CPF
 
         total %= 11;
         return total < 2 ? 0 : 11 - total;
-    }
-
-    public static string GenerateUnformatted()
-    {
-        Span<char> dest = stackalloc char[11];
-        Utils.GenerateImpl(dest, CriaDigitoVerificador);
-        return new string(dest);
     }
 }
