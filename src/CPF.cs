@@ -13,6 +13,7 @@ public readonly struct CPF
         IsValid = Validate(value);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static bool Validate(string value)
     {
         Span<int> digits = stackalloc int[11];
