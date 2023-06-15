@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-internal delegate int SpanInt(ReadOnlySpan<int> span, bool skipFirst);
+internal delegate int SpanInt(ReadOnlySpan<int> span);
 
 public class Utils
 {
@@ -27,13 +27,15 @@ public class Utils
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     internal static void GenerateImpl(Span<char> dest, SpanInt criaDigito)
     {
-        Span<int> digits = stackalloc int[dest.Length];
+        Span<int> digits2 = stackalloc int[dest.Length + 1];
+        var digits = digits2.Slice(1);
+
         var len = dest.Length - 2;
         for (var i = 0; i < len; i++)
             digits[i] = _random.Next(0, 9);
 
-        digits[len] = criaDigito(digits, true);
-        digits[len + 1] = criaDigito(digits, false);
+        digits[len] = criaDigito(digits2);
+        digits[len + 1] = criaDigito(digits);
 
         for (var i = 0; i < digits.Length; i++)
             dest[i] = (char)(digits[i] + '0');

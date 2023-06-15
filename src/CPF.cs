@@ -16,29 +16,27 @@ public readonly struct CPF
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static bool Validate(string value)
     {
-        Span<int> digits = stackalloc int[11];
-
+        Span<int> digits2 = stackalloc int[12];
+        var digits = digits2.Slice(1);
         return Utils.TryWriteNumbers(digits, value)
-            && CriaDigitoVerificador(digits, true) == digits[9]
-            && CriaDigitoVerificador(digits, false) == digits[10];
+            && CriaDigitoVerificador(digits2) == digits[9]
+            && CriaDigitoVerificador(digits) == digits[10];
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    internal static int CriaDigitoVerificador(ReadOnlySpan<int> cpf, bool skipFirst)
+    internal static int CriaDigitoVerificador(ReadOnlySpan<int> cpf)
     {
-        var i = 0;
-
         var total =
-            (skipFirst ? 0 : cpf[i++] * 11) +
-            cpf[i++] * 10 +
-            cpf[i++] * 9 +
-            cpf[i++] * 8 +
-            cpf[i++] * 7 +
-            cpf[i++] * 6 +
-            cpf[i++] * 5 +
-            cpf[i++] * 4 +
-            cpf[i++] * 3 +
-            cpf[i++] * 2;
+            cpf[0] * 11 +
+            cpf[1] * 10 +
+            cpf[2] * 9 +
+            cpf[3] * 8 +
+            cpf[4] * 7 +
+            cpf[5] * 6 +
+            cpf[6] * 5 +
+            cpf[7] * 4 +
+            cpf[8] * 3 +
+            cpf[9] * 2;
 
         total %= 11;
         return total < 2 ? 0 : 11 - total;

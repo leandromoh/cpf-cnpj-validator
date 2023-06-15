@@ -19,17 +19,17 @@ public readonly struct CNPJ
         Span<int> digits = stackalloc int[14];
 
         return Utils.TryWriteNumbers(digits, value)
-            && CriaDigitoVerificador(digits, true) == digits[12]
-            && CriaDigitoVerificador(digits, false) == digits[13];
+            && CriaDigitoVerificador(digits) == digits[12]
+            && CriaDigitoVerificador(digits) == digits[13];
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    internal static int CriaDigitoVerificador(ReadOnlySpan<int> cnpj, bool skipFirst)
+    internal static int CriaDigitoVerificador(ReadOnlySpan<int> cnpj)
     {
         var i = 0;
 
         var total =
-            (skipFirst ? 0 : cnpj[i++] * 6) +
+            (false ? 0 : cnpj[i++] * 6) +
             cnpj[i++] * 5 +
             cnpj[i++] * 4 +
             cnpj[i++] * 3 +
