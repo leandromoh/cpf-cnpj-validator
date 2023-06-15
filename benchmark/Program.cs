@@ -120,6 +120,14 @@ public class CPFBenchmark
                 Fail(x);
     }
 
+    [Benchmark]
+    public void Imp11()
+    {
+        foreach (var x in CPFs)
+            if (new CPFImp11(x).IsValid is false)
+                Fail(x);
+    }
+
     private void Fail(string cpf) =>
         throw new Exception($"failed for '{cpf}' cpf");
 }
