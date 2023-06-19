@@ -28,7 +28,7 @@ public class CPFBenchmark
 
         CPFs = Enumerable
             .Range(0, Count)
-            .Select(_ => CPF.GenerateUnformatted())
+            .Select(_ => CPF.Generate())
             .ToArray();
     }
 

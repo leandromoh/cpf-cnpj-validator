@@ -8,11 +8,6 @@ namespace DocumentoHelper.Test;
 public class CNPJTest
 {
     [Theory]
-    [MemberData(nameof(GenerateCNPJSource))]
-    public void Validate_generated_values(string doc) =>
-        CNPJ.Validate(doc).Should().BeTrue();
-
-    [Theory]
     
     // formatted
 
@@ -42,8 +37,41 @@ public class CNPJTest
     public void Validate(string doc) =>
         CNPJ.Validate(doc).Should().BeTrue();
 
-    public static IEnumerable<object[]> GenerateCNPJSource() =>
+    [Theory]
+    [InlineData("06@352(066)0001&27")]
+    [InlineData("11744$63*600%0164)")]
+    public void Validate_ignores_non_digits(string doc) =>
+        CNPJ.Validate(doc).Should().BeTrue();
+
+    [Theory]
+    [InlineData("--@#$%----06352066000127.............")]
+    [InlineData("¨#$%11¨%¨&*(744)(*63600%¨&*+++0;;;164")]
+    public void Validate_has_no_limit_for_string_length(string doc) =>
+        CNPJ.Validate(doc).Should().BeTrue();
+
+    [Theory]
+    [MemberData(nameof(GenerateSource))]
+    public void Validate_generate_values(string doc)
+    {
+        doc.Should().MatchRegex(@"^\d{8}0001\d{2}$");
+        CNPJ.Validate(doc).Should().BeTrue();
+    }
+
+    public static IEnumerable<object[]> GenerateSource() =>
         Enumerable
         .Range(0, 1000)
-        .Select(_ => new[] { CNPJ.GenerateUnformatted() });
+        .Select(_ => new[] { CNPJ.Generate() });
+
+    [Theory]
+    [MemberData(nameof(GenerateFormattedSource))]
+    public void Validate_generate_formatted_values(string doc)
+    {
+        doc.Should().MatchRegex(@"^\d{2}\.\d{3}\.\d{3}/0001-\d{2}$");
+        CNPJ.Validate(doc).Should().BeTrue();
+    }
+
+    public static IEnumerable<object[]> GenerateFormattedSource() =>
+        Enumerable
+        .Range(0, 1000)
+        .Select(_ => new[] { CNPJ.GenerateFormatted() });
 }

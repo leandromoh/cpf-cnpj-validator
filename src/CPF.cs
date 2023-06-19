@@ -44,10 +44,32 @@ public readonly struct CPF
         return total < 2 ? 0 : 11 - total;
     }
 
-    public static string GenerateUnformatted()
+    public static string Generate()
     {
-        Span<char> dest = stackalloc char[11];
-        Utils.GenerateImpl(dest, CriaDigitoVerificador);
-        return new string(dest);
+        Span<int> digits = stackalloc int[11];
+        Utils.GenerateImpl(digits, 9);
+        digits[9] = CriaDigitoVerificador(digits, true);
+        digits[10] = CriaDigitoVerificador(digits, false);
+        Span<char> chars = stackalloc char[11];
+        Utils.Cast(digits, chars);
+        return new string(chars);
+    }
+
+    public static string GenerateFormatted()
+    {
+        Span<int> digits = stackalloc int[11];
+        Utils.GenerateImpl(digits, 9);
+        digits[9] = CriaDigitoVerificador(digits, true);
+        digits[10] = CriaDigitoVerificador(digits, false);
+        Span<char> chars = stackalloc char[14];
+
+        Utils.Cast(digits.Slice(0, 3), chars.Slice(0, 3));
+        chars[3] = '.';
+        Utils.Cast(digits.Slice(3, 3), chars.Slice(4, 3));
+        chars[7] = '.';
+        Utils.Cast(digits.Slice(6, 3), chars.Slice(8, 3));
+        chars[11] = '-';
+        Utils.Cast(digits.Slice(9, 2), chars.Slice(12, 2));
+        return new string(chars);
     }
 }

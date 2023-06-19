@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 
 internal delegate int SpanInt(ReadOnlySpan<int> span, bool skipFirst);
 
-public class Utils
+internal class Utils
 {
     private static readonly Random _random = new();
 
@@ -25,17 +25,18 @@ public class Utils
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    internal static void GenerateImpl(Span<char> dest, SpanInt criaDigito)
+    public static void GenerateImpl(Span<int> digits, int len)
     {
-        Span<int> digits = stackalloc int[dest.Length];
-        var len = dest.Length - 2;
         for (var i = 0; i < len; i++)
             digits[i] = _random.Next(0, 9);
+    }
 
-        digits[len] = criaDigito(digits, true);
-        digits[len + 1] = criaDigito(digits, false);
+    public static void Cast(Span<int> digits, Span<char> chars)
+    {
+        if (chars.Length != digits.Length)
+            return;
 
         for (var i = 0; i < digits.Length; i++)
-            dest[i] = (char)(digits[i] + '0');
+            chars[i] = (char)(digits[i] + '0');
     }
 }
