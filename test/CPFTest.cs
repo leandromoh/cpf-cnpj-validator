@@ -8,11 +8,6 @@ namespace DocumentoHelper.Test;
 public class CPFTest
 {
     [Theory]
-    [MemberData(nameof(GenerateCPFSource))]
-    public void Validate_generated_values(string doc) =>
-        CPF.Validate(doc).Should().BeTrue();
-
-    [Theory]
 
     // formatted
 
@@ -42,8 +37,41 @@ public class CPFTest
     public void Validate(string doc) =>
         CPF.Validate(doc).Should().BeTrue();
 
-    public static IEnumerable<object[]> GenerateCPFSource() =>
+    [Theory]
+    [InlineData("084@664_028#70")]
+    [InlineData("120+862!205(61")]
+    public void Validate_ignores_non_digits(string doc) =>
+        CPF.Validate(doc).Should().BeTrue();
+
+    [Theory]
+    [InlineData("--------084@664_028#70.............")]
+    [InlineData("()()()@@120+862!!!!205(61)(*&¨#@ %¨)")]
+    public void Validate_has_no_limit_for_string_length(string doc) =>
+        CPF.Validate(doc).Should().BeTrue();
+
+    [Theory]
+    [MemberData(nameof(GenerateSource))]
+    public void Validate_generate_values(string doc)
+    {
+        doc.Should().MatchRegex(@"^\d{11}$");
+        CPF.Validate(doc).Should().BeTrue();
+    }
+
+    public static IEnumerable<object[]> GenerateSource() =>
         Enumerable
         .Range(0, 1000)
-        .Select(_ => new[] { CPF.GenerateUnformatted() });
+        .Select(_ => new[] { CPF.Generate() });
+
+    [Theory]
+    [MemberData(nameof(GenerateFormattedSource))]
+    public void Validate_generate_formatted_values(string doc)
+    {
+        doc.Should().MatchRegex(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$");
+        CPF.Validate(doc).Should().BeTrue();
+    }
+
+    public static IEnumerable<object[]> GenerateFormattedSource() =>
+        Enumerable
+        .Range(0, 1000)
+        .Select(_ => new[] { CPF.GenerateFormatted() });
 }
