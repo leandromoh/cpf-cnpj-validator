@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "benchmark", "benchmark\benchmark.csproj", "{F745B7A4-748E-4530-8662-9A68BA09AFBD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentoHelper", "src\DocumentoHelper.csproj", "{23D934E5-4D6D-42A4-9F24-CA6F0698F904}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "test", "test\test.csproj", "{123C8174-1042-4644-9DC0-4E22E7D44620}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F745B7A4-748E-4530-8662-9A68BA09AFBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F745B7A4-748E-4530-8662-9A68BA09AFBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F745B7A4-748E-4530-8662-9A68BA09AFBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F745B7A4-748E-4530-8662-9A68BA09AFBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23D934E5-4D6D-42A4-9F24-CA6F0698F904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23D934E5-4D6D-42A4-9F24-CA6F0698F904}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23D934E5-4D6D-42A4-9F24-CA6F0698F904}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23D934E5-4D6D-42A4-9F24-CA6F0698F904}.Release|Any CPU.Build.0 = Release|Any CPU
+		{123C8174-1042-4644-9DC0-4E22E7D44620}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{123C8174-1042-4644-9DC0-4E22E7D44620}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{123C8174-1042-4644-9DC0-4E22E7D44620}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{123C8174-1042-4644-9DC0-4E22E7D44620}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CA01ACFF-AC87-4512-A527-2B8BB9C26369}
+	EndGlobalSection
+EndGlobal
