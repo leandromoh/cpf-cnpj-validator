@@ -1,0 +1,22 @@
+name: Validate dotnet
+
+on: [ pull_request, push ]
+
+jobs:
+  setup-version:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    name: dotnet test
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: |
+            2.1.x
+            3.1.x
+            5.0.x
+            6.0.x
+            7.0.x
+      - run: dotnet test test/test.csproj
