@@ -2,8 +2,6 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("benchmark")]
 
-internal delegate int SpanInt(ReadOnlySpan<int> span, bool skipFirst);
-
 internal class Utils
 {
     private static readonly Random _random = new();
