@@ -16,32 +16,31 @@ public readonly struct CNPJ
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static bool Validate(string value)
     {
-        Span<int> digits = stackalloc int[14];
+        Span<int> digits2 = stackalloc int[15];
+        var digits = digits2.Slice(1);
 
         return Utils.TryWriteNumbers(digits, value)
-            && CriaDigitoVerificador(digits, true) == digits[12]
-            && CriaDigitoVerificador(digits, false) == digits[13];
+            && CriaDigitoVerificador(digits2) == digits[12]
+            && CriaDigitoVerificador(digits) == digits[13];
     }
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-    internal static int CriaDigitoVerificador(ReadOnlySpan<int> cnpj, bool skipFirst)
+    internal static int CriaDigitoVerificador(ReadOnlySpan<int> cnpj)
     {
-        var i = 0;
-
         var total =
-            (skipFirst ? 0 : cnpj[i++] * 6) +
-            cnpj[i++] * 5 +
-            cnpj[i++] * 4 +
-            cnpj[i++] * 3 +
-            cnpj[i++] * 2 +
-            cnpj[i++] * 9 +
-            cnpj[i++] * 8 +
-            cnpj[i++] * 7 +
-            cnpj[i++] * 6 +
-            cnpj[i++] * 5 +
-            cnpj[i++] * 4 +
-            cnpj[i++] * 3 +
-            cnpj[i++] * 2;
+            cnpj[0] * 6 +
+            cnpj[1] * 5 +
+            cnpj[2] * 4 +
+            cnpj[3] * 3 +
+            cnpj[4] * 2 +
+            cnpj[5] * 9 +
+            cnpj[6] * 8 +
+            cnpj[7] * 7 +
+            cnpj[8] * 6 +
+            cnpj[9] * 5 +
+            cnpj[10] * 4 +
+            cnpj[11] * 3 +
+            cnpj[12] * 2;
 
         total %= 11;
         return total < 2 ? 0 : 11 - total;
@@ -49,14 +48,16 @@ public readonly struct CNPJ
 
     public static string Generate()
     {
-        Span<int> digits = stackalloc int[14];
+        Span<int> digits2 = stackalloc int[15];
+        var digits = digits2.Slice(1);
+
         Utils.GenerateImpl(digits, 8);
         digits[8] = 0;
         digits[9] = 0;
         digits[10] = 0;
         digits[11] = 1;
-        digits[12] = CriaDigitoVerificador(digits, true);
-        digits[13] = CriaDigitoVerificador(digits, false);
+        digits[12] = CriaDigitoVerificador(digits2);
+        digits[13] = CriaDigitoVerificador(digits);
         Span<char> chars = stackalloc char[14];
         Utils.Cast(digits, chars);
         return new string(chars);
@@ -64,14 +65,16 @@ public readonly struct CNPJ
 
     public static string GenerateFormatted()
     {
-        Span<int> digits = stackalloc int[14];
+        Span<int> digits2 = stackalloc int[15];
+        var digits = digits2.Slice(1);
+
         Utils.GenerateImpl(digits, 8);
         digits[8] = 0;
         digits[9] = 0;
         digits[10] = 0;
         digits[11] = 1;
-        digits[12] = CriaDigitoVerificador(digits, true);
-        digits[13] = CriaDigitoVerificador(digits, false);
+        digits[12] = CriaDigitoVerificador(digits2);
+        digits[13] = CriaDigitoVerificador(digits);
         Span<char> chars = stackalloc char[18];
 
         Utils.Cast(digits.Slice(0, 2), chars.Slice(0, 2));
