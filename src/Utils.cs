@@ -7,6 +7,24 @@ internal class Utils
     private static readonly Random _random = new();
 
     [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+    public static bool TryWriteAlphanumeric(Span<char> values, string value)
+    {
+        var written = 0;
+        foreach (var x in value)
+        {
+            if (char.IsAsciiLetterOrDigit(x))
+            {
+                if (written == values.Length)
+                    return false;
+
+                values[written++] = x;
+            }
+        }
+
+        return written == values.Length;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
     public static bool TryWriteNumbers(Span<int> digits, string value)
     {
         var written = 0;
